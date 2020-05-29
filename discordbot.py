@@ -1,6 +1,6 @@
 import discord
 import json
-from geocode import geocode
+from geocode import get_gridpoints
 
 client = discord.Client()
 
