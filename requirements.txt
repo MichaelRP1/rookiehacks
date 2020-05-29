@@ -1,0 +1,4 @@
+# Install Package Used for GraphQL APIs https://graphql.org/code/#python
+graphene
+# Install Amazon Skills SDK https://developer.amazon.com/en-US/docs/alexa/alexa-skills-kit-sdk-for-python/set-up-the-sdk.html
+ask-sdk -t skill_env
