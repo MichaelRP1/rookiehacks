@@ -1,6 +1,6 @@
 import discord
 import json
-from geocode.py import geocode
+from geocode import geocode
 
 client = discord.Client()
 
@@ -15,7 +15,7 @@ async def on_message(message):
     print(message.content)
     if message.content.startswith("!location"):
         client_location = message.content[len("!location") +1 :]
-        location = geolocation(client_location)
+        location = get_gridpoints(client_location)
         channel = client.get_channel(message.channel.id)
         await channel.send(location)
     if message.content.startswith("!shutdown"):
