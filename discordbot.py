@@ -103,6 +103,8 @@ async def alertsEmbed(channel, data, area):
             break
         i = i + 1
         embed.add_field(name=ndata['properties']['event'], value="**" + ndata['properties']['severity'] + "** - *" + ndata['properties']['areaDesc'] + "*\n" + ndata['properties']['headline'], inline=False)
+    if i == 0:
+        embed.add_field(name="No Alerts", value="There are currently no alerts in " + area + ". Visit weather.gov for official information")
     await channel.send(embed=embed)
 
 @client.event
