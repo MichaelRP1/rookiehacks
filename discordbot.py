@@ -72,6 +72,9 @@ async def on_message(message):
                     break
                 await forecastHourlyEmbed(channel, client_location, data)
                 i = i+1
+    if message.content.startswith("!info"):
+        channel = client.get_channel(message.channel.id)
+        await infoEmbed(channel)
     if message.content.startswith("!shutdown"):
         if message.author.id == 189405094452789257: # Enter Discord IDs of Users who can Shut Down Bot
             await client.logout()
@@ -131,6 +134,22 @@ async def cmdsEmbed(channel):
     embed.add_field(name="!coords [location]", value="Returns coorditates, NWS gridpoint, and NWS office for a specified location", inline=False)
     embed.add_field(name="!forecast [location]", value="Returns forecast for next ~36 hours for a specified location", inline=False)
     embed.add_field(name="!hourly [location]", value="Returns hourly forecast for next ~4 hours for a specified location", inline=False)
+    embed.add_field(name="!info", value="Returns list of information about bot and dependencies", inline=False)
+    await channel.send(embed=embed)
+
+@client.event
+async def infoEmbed(channel):
+    embed = discord.Embed(
+        title = "Information",
+        description = "Information about bot, libraries, and APIs",
+        colour = 0x006400
+    )
+    embed.set_footer(text="Project for MLH RookieHacks 2020")
+    embed.add_field(name="Project GitHub", value="https://github.com/MichaelRP1/rookiehacks. BSD-3-Clause License. Made for MLH RookieHacks 2020", inline=False)
+    embed.add_field(name="National Weather Service API", value="https://api.weather.gov/. In the public domain.", inline=False)
+    embed.add_field(name="Discord.py", value="https://github.com/Rapptz/discord.py. MIT License", inline=False)
+    embed.add_field(name="Python Geocoder", value="https://github.com/DenisCarriere/geocoder. MIT License", inline=False)
+    embed.add_field(name="Nominatim API", value="https://nominatim.org/. ODbL License", inline=False)
     await channel.send(embed=embed)
 
 @client.event
