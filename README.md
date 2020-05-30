@@ -18,6 +18,7 @@ Allows you to quicly and easily view the weather forcast and active alerts for a
 - Clone the repository using ``git clone https://github.com/MichaelRP1/rookiehacks``
 - Create a Discord application [here](https://discord.com/developers/applications)
 - Create a ``creds.json`` file using the ``creds_template.json`` file as a template and place your Discord app token in the ``token`` field.
+- Change the ``User-Agent`` field in ``geocode.py``
 - Run ``python discordbot.py``
 
 ## Built With

@@ -9,7 +9,7 @@ points_headers = {
 }
 
 def geocode(client_location):
-    geolocator = Nominatim(user_agent="Unofficial National Weather Service Discord Bot. Made during MLH RookieHacks")
+    geolocator = Nominatim(user_agent=points_headers['User-Agent'])
     location = geolocator.geocode(client_location)
     if location == None:
         return None
@@ -54,8 +54,8 @@ def getForecastHourly(location):
 def getAlerts(location):
     try:
         alerts = requests.get("https://api.weather.gov/alerts/active/area/{0}".format(location), headers=points_headers)
+        tmp = json.loads(alerts.text)
+        tmp2 = tmp['features']
     except:
-        return "Error"
-    tmp = json.loads(alerts.text)
-    tmp2 = tmp['features']
+        return None
     return tmp2

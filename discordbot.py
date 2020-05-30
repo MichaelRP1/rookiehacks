@@ -50,7 +50,7 @@ async def on_message(message):
         if alerts != None:
             await alertsEmbed(channel, alerts, client_area)
         else:
-            channel.send("Please enter a valid area.\nUse !areas to list the areas")
+            await channel.send("Please enter a valid area.\nUse !areas to list the areas")
     if message.content.startswith("!commands"):
         channel = client.get_channel(message.channel.id)
         await cmdsEmbed(channel)
@@ -82,7 +82,7 @@ async def on_message(message):
 @client.event
 async def forecastEmbed(channel, location, data):
     embed = discord.Embed(
-        title = data['startTime'][len("0000-00-00T") + 1 : len("0000-00-00T00:00") +1],
+        title = data['name'],
         description = "Forecast for " + location,
         colour = 0x4285F4
     )
@@ -155,7 +155,7 @@ async def infoEmbed(channel):
 @client.event
 async def forecastHourlyEmbed(channel, location, data):
     embed = discord.Embed(
-        title = data['name'],
+        title = data['startTime'][len("0000-00-00T") : len("0000-00-00T00:00")],
         description = "Hourly Forecast for " + location,
         colour = 0x4285F4
     )
