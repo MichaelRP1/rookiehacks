@@ -20,11 +20,11 @@ def get_gridpoints(location):
     client_location = geocode(location)
     try:
         points = requests.get("https://api.weather.gov/points/{0[0]},{0[1]}".format(client_location), headers=points_headers)
+        tmp = json.loads(points.text)
+        tmp1 = tmp['properties']
+        passed = [tmp1['gridX'], tmp1['gridY'], tmp1['relativeLocation']['properties']['city'], tmp1['relativeLocation']['properties']['state'], tmp1['cwa'], client_location[0], client_location[1]]
     except:
         return None
-    tmp = json.loads(points.text)
-    tmp1 = tmp['properties']
-    passed = [tmp1['gridX'], tmp1['gridY'], tmp1['relativeLocation']['properties']['city'], tmp1['relativeLocation']['properties']['state'], tmp1['cwa'], client_location[0], client_location[1]]
     return passed
 
 def getForecast(location):
