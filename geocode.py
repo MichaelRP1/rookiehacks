@@ -27,4 +27,5 @@ def getForecast(location):
     lat, lon = client_location
     forecast = noaa.points_forecast(lat, lon, hourly=False)
     print(forecast)
+    return forecast
 
