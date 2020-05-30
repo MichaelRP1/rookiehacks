@@ -25,7 +25,7 @@ async def on_message(message):
             await channel.send("Please input a valid location")
     if message.content.startswith("!areas"):
         channel = client.get_channel(message.channel.id)
-        await channel.send("**Available areas (for !alerts)**: ``AL, AK, AS, AR, AZ, CA, CO, CT, DE, DC, FL, GA, GU, HI, ID, IL, IN, IA, KS, KY, LA, ME, MD, MA, MI, MN, MS, MO, MT, NE, NV, NH, NJ, NM, NY, NC, ND, OH, OK, OR, PA, PR, RI, SC, SD, TN, TX, UT, VT, VI, VA, WA, WV, WI, WY, PZ, PK, PH, PS, PM, AN, AM, GM, LS, LM, LH, LC, LE, LO``")
+        await channel.send("Available areas (for !alerts): ``AL, AK, AS, AR, AZ, CA, CO, CT, DE, DC, FL, GA, GU, HI, ID, IL, IN, IA, KS, KY, LA, ME, MD, MA, MI, MN, MS, MO, MT, NE, NV, NH, NJ, NM, NY, NC, ND, OH, OK, OR, PA, PR, RI, SC, SD, TN, TX, UT, VT, VI, VA, WA, WV, WI, WY, PZ, PK, PH, PS, PM, AN, AM, GM, LS, LM, LH, LC, LE, LO``")
     if message.content.startswith("!forecast"):
         client_location = message.content[len("!forecast") +1 :]
         channel = client.get_channel(message.channel.id)
@@ -48,7 +48,7 @@ async def on_message(message):
         alerts = getAlerts(client_area)
         await wait.delete()
         if alerts != None:
-            await alertsEmbed(channel, alerts)
+            await alertsEmbed(channel, alerts, client_area)
         else:
             channel.send("Please enter a valid area.\nUse !areas to list the areas")
     if message.content.startswith("!commands"):
@@ -84,20 +84,25 @@ async def forecastEmbed(channel, location, data):
         colour = 0x4285F4
     )
     embed.set_thumbnail(url=data['icon'])
-    embed.set_footer(text="Unofficial National Weather Service")
+    embed.set_footer(text="Visit weather.gov for official information")
     embed.add_field(name="Weather", value=data['shortForecast'], inline=False)
     embed.add_field(name="Temperature", value=str(data['temperature']) + " °F", inline=False)
     embed.add_field(name="Wind", value=data['windSpeed'] + " " + data['windDirection'], inline=False)
     await channel.send(embed=embed)
 
 @client.event
-async def alertsEmbed(channel, data):
+async def alertsEmbed(channel, data, area):
     embed = discord.Embed(
-        title = data['title'],
-        description = data['features'],
+        title = "Current watches, warnings, and advisories for " + area,
         colour = 0xFF7F50
     )
-    embed.set_footer(text="Unofficial National Weather Service")
+    embed.set_footer(text="Visit weather.gov for official information")
+    i = 0
+    for ndata in data:
+        if i > 4:
+            break
+        i = i + 1
+        embed.add_field(name=ndata['properties']['event'], value="**" + ndata['properties']['severity'] + "** - *" + ndata['properties']['areaDesc'] + "*\n" + ndata['properties']['headline'], inline=False)
     await channel.send(embed=embed)
 
 @client.event
@@ -107,7 +112,7 @@ async def coordsEmbed(channel, data):
         description = str(data[5]) + ", " + str(data[6]),
         colour = 0x006400
     )
-    embed.set_footer(text="Unofficial National Weather Service")
+    embed.set_footer(text="Visit weather.gov for official information")
     embed.add_field(name="NWS Gridpoint", value="X = " + str(data[0]) + ", Y = " + str(data[1]), inline=True)
     embed.add_field(name="NWS Office", value=data[4], inline=True)
     await channel.send(embed=embed)
@@ -118,8 +123,8 @@ async def cmdsEmbed(channel):
         title = "Available Commands",
         colour = 0x006400
     )
-    embed.set_footer(text="Unofficial National Weather Service")
-    embed.add_field(name="!alerts [area]", value="Returns list of alerts for a specified area", inline=False)
+    embed.set_footer(text="Visit weather.gov for official information")
+    embed.add_field(name="!alerts [area]", value="Returns first five alerts for a specified area", inline=False)
     embed.add_field(name="!areas", value="Returns list of areas for !alerts command", inline=False)
     embed.add_field(name="!coords [location]", value="Returns coorditates, NWS gridpoint, and NWS office for a specified location", inline=False)
     embed.add_field(name="!forecast [location]", value="Returns forecast for next ~36 hours for a specified location", inline=False)
@@ -134,7 +139,7 @@ async def forecastHourlyEmbed(channel, location, data):
         colour = 0x4285F4
     )
     embed.set_thumbnail(url=data['icon'])
-    embed.set_footer(text="Unofficial National Weather Service")
+    embed.set_footer(text="Visit weather.gov for official information")
     embed.add_field(name="Weather", value=data['shortForecast'], inline=False)
     embed.add_field(name="Temperature", value=str(data['temperature']) + " °F", inline=False)
     embed.add_field(name="Wind", value=data['windSpeed'] + " " + data['windDirection'], inline=False)
