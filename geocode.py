@@ -39,6 +39,18 @@ def getForecast(location):
     tmp1 = forecast['properties']['periods']
     return tmp1
 
+def getForecastHourly(location):
+    client_location = get_gridpoints(location)
+    if client_location == None:
+        return None
+    try:
+        tmp = requests.get("https://api.weather.gov/gridpoints/{0[4]}/{0[0]},{0[1]}/forecast/hourly".format(client_location), headers=points_headers)
+    except:
+        return None
+    forecast = json.loads(tmp.text)
+    tmp1 = forecast['properties']['periods']
+    return tmp1
+
 def getAlerts(location):
     alerts = requests.get("https://api.weather.gov/alerts/active/area/{0}".format(location), headers=points_headers)
     tmp = json.loads(alerts.text)

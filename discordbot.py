@@ -3,6 +3,7 @@ import json
 from geocode import get_gridpoints
 from geocode import getAlerts
 from geocode import getForecast
+from geocode import getForecastHourly
 
 client = discord.Client()
 
@@ -56,13 +57,29 @@ async def on_message(message):
     if message.content.startswith("!cmds"):
         channel = client.get_channel(message.channel.id)
         await cmdsEmbed(channel)
+    if message.content.startswith("!hourly"):
+        client_location = message.content[len("!hourly") +1 :]
+        channel = client.get_channel(message.channel.id)
+        wait = await channel.send("Please wait, fetching data")
+        forecast = getForecastHourly(client_location)
+        await wait.delete()
+        if forecast == None:
+            await channel.send("Please input a valid location")
+        else:    
+            i = 0
+            for data in forecast:
+                if i > 3:
+                    break
+                await forecastHourlyEmbed(channel, client_location, data)
+                i = i+1
     if message.content.startswith("!shutdown"):
-        await client.logout()
+        if message.author.id == 189405094452789257: # Enter Discord IDs of Users who can Shut Down Bot
+            await client.logout()
 
 @client.event
 async def forecastEmbed(channel, location, data):
     embed = discord.Embed(
-        title = data['name'],
+        title = data['startTime'][len("0000-00-00T") + 1 : len("0000-00-00T00:00") +1],
         description = "Forecast for " + location,
         colour = 0x4285F4
     )
@@ -106,6 +123,21 @@ async def cmdsEmbed(channel):
     embed.add_field(name="!areas", value="Returns list of areas for !alerts command", inline=False)
     embed.add_field(name="!coords [location]", value="Returns coorditates, NWS gridpoint, and NWS office for a specified location", inline=False)
     embed.add_field(name="!forecast [location]", value="Returns forecast for next ~36 hours for a specified location", inline=False)
+    embed.add_field(name="!hourly [location]", value="Returns hourly forecast for next ~4 hours for a specified location", inline=False)
+    await channel.send(embed=embed)
+
+@client.event
+async def forecastHourlyEmbed(channel, location, data):
+    embed = discord.Embed(
+        title = data['name'],
+        description = "Hourly Forecast for " + location,
+        colour = 0x4285F4
+    )
+    embed.set_thumbnail(url=data['icon'])
+    embed.set_footer(text="Unofficial National Weather Service")
+    embed.add_field(name="Weather", value=data['shortForecast'], inline=False)
+    embed.add_field(name="Temperature", value=str(data['temperature']) + " °F", inline=False)
+    embed.add_field(name="Wind", value=data['windSpeed'] + " " + data['windDirection'], inline=False)
     await channel.send(embed=embed)
 
 token = ""
