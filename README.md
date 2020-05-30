@@ -30,5 +30,5 @@ Allows you to quicly and easily view the weather forcast and active alerts for a
 - [Nominatim API](https://nominatim.org/)
 
 ## GitHub Link and License
-[GitHub](https://github.com/MichaelRP1/rookiehacks)
-[BSD-3-Clause License](https://github.com/MichaelRP1/rookiehacks/LICENSE)
+- [GitHub](https://github.com/MichaelRP1/rookiehacks)
+- [BSD-3-Clause License](https://github.com/MichaelRP1/rookiehacks/LICENSE)
