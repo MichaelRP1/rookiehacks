@@ -11,7 +11,7 @@ Allows you to quicly and easily view the weather forcast and active alerts for a
 - !areas - Returns list of areas for !alerts command
 - !coords (location) - Returns coorditates, NWS gridpoint, and NWS office for a specified location
 - !forecast (location) - Returns forecast for next ~36 hours for a specified location
-- !hourly (forecast) - Returns hourly forecast for next ~4 hours for a specified location
+- !hourly (location) - Returns hourly forecast for next ~4 hours for a specified location
 - !info - Returns list of information about bot and dependencies
 
 ## How to Install / Use
