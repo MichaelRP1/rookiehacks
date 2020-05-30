@@ -8,7 +8,7 @@ noaa = nws.NOAA()
 
 points_headers = {
     'User-Agent': 'MLH RookieHacks Test Application. Used for Discord bot using Discord.py',
-    'Accept': 'application/ld+json'
+    'Accept': 'application/geo+json'
 }
 
 def geocode(client_location):
@@ -21,8 +21,14 @@ def geocode(client_location):
 
 def get_gridpoints(location):
     client_location = geocode(location)
-    points = requests.get("https://api.weather.gov/points/{0.lat},{0.lon}".format(client_location), headers=points_headers)
-    print(points)
+    try:
+        points = requests.get("https://api.weather.gov/points/{0[0]},{0[1]}".format(client_location), headers=points_headers)
+    except:
+        return None
+    tmp = json.loads(points.text)
+    tmp1 = tmp['properties']
+    passed = [tmp1['gridX'], tmp1['gridY'], tmp1['relativeLocation']['properties']['city'], tmp1['relativeLocation']['properties']['state'], tmp1['cwa'], client_location[0], client_location[1]]
+    return passed
 
 def getForecast(location):
     client_location = geocode(location)
@@ -33,3 +39,7 @@ def getForecast(location):
     tmp1 = forecast['properties']['periods']
     return tmp1
 
+def getAlerts(location):
+    alerts = requests.get("https://api.weather.gov/alerts/active/area/{0}".format(location), headers=points_headers)
+    tmp = json.loads(alerts.text)
+    return tmp
