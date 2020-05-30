@@ -14,6 +14,8 @@ points_headers = {
 def geocode(client_location):
     geolocator = Nominatim(user_agent="MLH RookieHacks Test Application")
     location = geolocator.geocode(client_location)
+    if location == None:
+        return None
     loc = [location.latitude, location.longitude]
     return loc
 
@@ -24,8 +26,10 @@ def get_gridpoints(location):
 
 def getForecast(location):
     client_location = geocode(location)
+    if client_location == None:
+        return None
     lat, lon = client_location
     forecast = noaa.points_forecast(lat, lon, hourly=False)
-    print(forecast)
-    return forecast
+    tmp1 = forecast['properties']['periods']
+    return tmp1
 
