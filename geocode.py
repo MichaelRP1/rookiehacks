@@ -2,9 +2,6 @@ import json
 import discord
 import requests
 from geopy.geocoders import Nominatim
-from noaa_sdk import noaa as nws
-
-noaa = nws.NOAA()
 
 points_headers = {
     'User-Agent': 'MLH RookieHacks Test Application. Used for Discord bot using Discord.py',
@@ -31,11 +28,14 @@ def get_gridpoints(location):
     return passed
 
 def getForecast(location):
-    client_location = geocode(location)
+    client_location = get_gridpoints(location)
     if client_location == None:
         return None
-    lat, lon = client_location
-    forecast = noaa.points_forecast(lat, lon, hourly=False)
+    try:
+        tmp = requests.get("https://api.weather.gov/gridpoints/{0[4]}/{0[0]},{0[1]}/forecast".format(client_location), headers=points_headers)
+    except:
+        return None
+    forecast = json.loads(tmp.text)
     tmp1 = forecast['properties']['periods']
     return tmp1
 
