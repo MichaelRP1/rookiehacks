@@ -11,5 +11,5 @@ multidict==4.7.6
 noaa-sdk==0.1.18
 requests==2.22.0
 urllib3==1.26.5
-websockets==8.1
+websockets==9.1
 yarl==1.4.2
